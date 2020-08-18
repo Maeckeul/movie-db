@@ -8,12 +8,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * @Route("/default", name="default")
+     * Page d'accueil
+     * 
+     * @Route("/", name="homepage")
      */
-    public function index()
+    public function homepage()
     {
-        return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
-        ]);
+        return $this->render('homepage.html.twig');
     }
 }
