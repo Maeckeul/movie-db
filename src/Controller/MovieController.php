@@ -79,4 +79,23 @@ class MovieController extends AbstractController
 
         return $this->render('movie/add.html.twig');
     }
+
+    /**
+     * Supprimer un film
+     * 
+     * @Route("/delete/{id}", name="movie_delete", methods={"GET"})
+     */
+    public function delete($id) 
+    {
+        $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+
+        if(!$movie) {
+            throw $this->createNotFoundException("Ce film n'existe pas !");
+        }
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($movie);
+        $manager->flush();
+
+        return $this->redirectToRoute('movies_list');
+    }
 }
