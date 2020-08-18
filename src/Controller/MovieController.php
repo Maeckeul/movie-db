@@ -31,9 +31,9 @@ class MovieController extends AbstractController
      * 
      * @Route("/{id}/view", name="movie_view", requirements={"id" = "\d+"}, methods={"GET"})
      */
-    public function viewMovie($id)
+    public function viewMovie(Movie $movie)
     {
-        $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id); 
+        // $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id); 
 
         if(!$movie) {
             throw $this->createNotFoundException("Ce film n'existe pas !");
