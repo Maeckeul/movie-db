@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Movie Add {% endblock %}
+
+{% block body %}
+
+<h1>Ajouter un film</h1>
+
+<form method="POST">
+    <input type="text" name="title"/>
+    <input type="date" name="releaseDate"/>
+    <input type="submit" value="Sauvegarder"/>
+</form>
+
+{% endblock %}
