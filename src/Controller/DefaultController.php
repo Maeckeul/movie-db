@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Movie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,6 +15,10 @@ class DefaultController extends AbstractController
      */
     public function homepage()
     {
-        return $this->render('homepage.html.twig');
+        $movies = $this->getDoctrine()->getRepository(Movie::class)->findAll();
+
+        return $this->render('homepage.html.twig', [
+            "movies" =>$movies
+        ]);
     }
 }
