@@ -92,10 +92,45 @@ class MovieController extends AbstractController
         if(!$movie) {
             throw $this->createNotFoundException("Ce film n'existe pas !");
         }
+
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($movie);
         $manager->flush();
 
         return $this->redirectToRoute('movies_list');
+    }
+
+    /**
+     * Modifier un film
+     * 
+     * @Route("/{id}/update", name="movie_update", requirements={"id" = "\d+"}, methods={"GET", "POST"})
+     */
+    public function update(Movie $movie, Request $request)
+    {
+        if(!$movie) {
+            throw $this->createNotFoundException("Ce film n'existe pas !");
+        } 
+
+        if($request->getMethod() == Request::METHOD_POST) {
+
+            $title = $request->request->get('title');
+            if(empty($title)) {
+                $this->addFlash('warning', 'Le film doit avoir un titre !');
+            }
+
+            if(!empty($title)) {
+
+                $manager = $this->getDoctrine()->getManager();
+
+                $movie->setTitle($title);
+
+                $manager->flush();
+
+                return $this->redirectToRoute('movies_list');
+            }
+        }
+        return $this->render('movie/update.html.twig', [
+            'movie' => $movie,
+        ]);
     }
 }
