@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM; 
 
 /**
@@ -35,6 +37,16 @@ class Movie {
      * @ORM\ManyToOne(targetEntity="App\Entity\Person")
      */
     private $director;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Award", mappedBy="movie")
+     */
+    private $award;
+
+    public function __construct()
+    {
+        $this->award = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -85,6 +97,44 @@ class Movie {
     public function setDirector(?Person $director): self
     {
         $this->director = $director;
+
+        return $this;
+    }
+    
+    /**
+     * @return Collection|Award[]
+     */
+    public function getAward(): Collection
+    {
+        return $this->award;
+    }
+
+    public function setAward(?Award $award): self
+    {
+        $this->award = $award;
+
+        return $this;
+    }
+
+    public function addAward(Award $award): self
+    {
+        if (!$this->award->contains($award)) {
+            $this->award[] = $award;
+            $award->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAward(Award $award): self
+    {
+        if ($this->award->contains($award)) {
+            $this->award->removeElement($award);
+            // set the owning side to null (unless already changed)
+            if ($award->getMovie() === $this) {
+                $award->setMovie(null);
+            }
+        }
 
         return $this;
     }

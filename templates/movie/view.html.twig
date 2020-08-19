@@ -4,18 +4,26 @@
 
 {% block body %}
 
-    {{ dump(movie) }}
+    <h1>{{ movie.title }}</h1>
+    <p> {{ movie.category.label }}</p>
+    <p>Directed by {{ movie.director.name }}</p>
 
-    {{ dump(movie.category) }}
+    {% if movie.award is not empty %}
 
-    {{ dump(movie.category.label) }}
+    <ul>
 
-    {{ dump(movie.category) }}
+        {% for awards in movie.award %}
 
-    {{ dump(movie.director) }}
+        <li>{{ awards.title }} {{ awards.year }}</li>
 
-    {{ dump(movie.director.name) }}
+        {% endfor %}
 
-    {{ dump(movie.director) }}
-    
+    </ul>
+
+    {% else %}
+
+    <p>Ce film n'a obtenu aucune récompense</p>
+
+    {% endif %}
+
 {% endblock %}
