@@ -14,6 +14,11 @@
         <option value="{{ category.id }}">{{ category.label }}</option>
         {% endfor %}
     </select>
+    <select name="personId">
+        {% for person in persons %}
+        <option value="{{ person.id }}">{{ person.name }}</option>
+        {% endfor %}
+    </select>
     <input type="submit" value="Sauvegarder"/>
 </form>
 

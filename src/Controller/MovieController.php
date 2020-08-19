@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Movie;
+use App\Entity\Person;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,12 +69,22 @@ class MovieController extends AbstractController
                 $this->addFlash('warning', 'Le film doit avoir une catégorie !');
             }
 
+            $personId = intval($request->request->get('personId'));
+            if(empty($personId)) {
+                $this->addFlash('warning', 'Le film doit avoir un réalisateur !');
+            }
+
             $category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
             if(empty($category)){
                 $this->addFlash('warning', 'Le catégorie n\'existe pas !');
             }
 
-            if(!empty($title) && !empty($releaseDate) && !empty($category)) {
+            $person = $this->getDoctrine()->getRepository(Person::class)->find($personId);
+            if(empty($person)){
+                $this->addFlash('warning', 'Le réalisateur n\'existe pas !');
+            }
+
+            if(!empty($title) && !empty($releaseDate) && !empty($category) && !empty($person)) {
 
                 $manager = $this->getDoctrine()->getManager();
 
@@ -81,6 +92,7 @@ class MovieController extends AbstractController
                 $movie->setTitle($title);
                 $movie->setReleaseDate(new \DateTime($releaseDate));
                 $movie->setCategory($category);
+                $movie->setDirector($person);
 
                 $manager->persist($movie);
                 $manager->flush();
@@ -90,9 +102,11 @@ class MovieController extends AbstractController
         }
 
         $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        $persons = $this->getDoctrine()->getRepository(Person::class)->findAll();
 
         return $this->render('movie/add.html.twig', [
-            "categories" => $categories
+            "categories" => $categories,
+            "persons" => $persons
         ]);
 
         return $this->render('movie/add.html.twig');
@@ -136,19 +150,53 @@ class MovieController extends AbstractController
                 $this->addFlash('warning', 'Le film doit avoir un titre !');
             }
 
-            if(!empty($title)) {
+            $releaseDate = $request->request->get('releaseDate');
+            if(empty($releaseDate)) {
+                $this->addFlash('warning', 'Le film doit avoir une date de sortie !');
+            }
+
+            $categoryId = intval($request->request->get('categoryId'));
+            if(empty($categoryId)) {
+                $this->addFlash('warning', 'Le film doit avoir une catégorie !');
+            }
+
+            $personId = intval($request->request->get('personId'));
+            if(empty($personId)) {
+                $this->addFlash('warning', 'Le film doit avoir un réalisateur !');
+            }
+
+            $category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
+            if(empty($category)){
+                $this->addFlash('warning', 'Le catégorie n\'existe pas !');
+            }
+
+            $person = $this->getDoctrine()->getRepository(Person::class)->find($personId);
+            if(empty($person)){
+                $this->addFlash('warning', 'Le réalisateur n\'existe pas !');
+            }
+
+            if(!empty($title) && !empty($releaseDate) && !empty($category) && !empty($person)) {
 
                 $manager = $this->getDoctrine()->getManager();
 
                 $movie->setTitle($title);
+                $movie->setReleaseDate(new \DateTime($releaseDate));
+                $movie->setCategory($category);
+                $movie->setDirector($person);
 
                 $manager->flush();
 
                 return $this->redirectToRoute('movies_list');
             }
         }
+
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        $persons = $this->getDoctrine()->getRepository(Person::class)->findAll();
+
         return $this->render('movie/update.html.twig', [
             'movie' => $movie,
+            "categories" => $categories,
+            "persons" => $persons
         ]);
     }
 }
