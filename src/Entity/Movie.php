@@ -29,7 +29,7 @@ class Movie {
     private $releaseDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="movies")
      */
     private $category;
 
@@ -100,20 +100,13 @@ class Movie {
 
         return $this;
     }
-    
+
     /**
      * @return Collection|Award[]
      */
     public function getAward(): Collection
     {
         return $this->award;
-    }
-
-    public function setAward(?Award $award): self
-    {
-        $this->award = $award;
-
-        return $this;
     }
 
     public function addAward(Award $award): self

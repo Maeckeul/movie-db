@@ -6,4 +6,14 @@
 
     {{ dump(category) }}
 
+    <ul>
+        {% for movie in category.movies %}
+
+        <li>{{ movie.title}}</li>
+
+        {% endfor %}
+    </ul>
+
+    {{ dump(category) }}
+
 {% endblock %}
