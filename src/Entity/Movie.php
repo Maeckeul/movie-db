@@ -31,6 +31,11 @@ class Movie {
      */
     private $category;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person")
+     */
+    private $director;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,6 +73,18 @@ class Movie {
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getDirector(): ?Person
+    {
+        return $this->director;
+    }
+
+    public function setDirector(?Person $director): self
+    {
+        $this->director = $director;
 
         return $this;
     }
