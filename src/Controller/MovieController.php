@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Movie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,13 +63,24 @@ class MovieController extends AbstractController
                 $this->addFlash('warning', 'Le film doit avoir une date de sortie !');
             }
 
-            if(!empty($title) && !empty($releaseDate)) {
+            $categoryId = intval($request->request->get('categoryId'));
+            if(empty($categoryId)) {
+                $this->addFlash('warning', 'Le film doit avoir une catégorie !');
+            }
+
+            $category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
+            if(empty($category)){
+                $this->addFlash('warning', 'Le catégorie n\'existe pas !');
+            }
+
+            if(!empty($title) && !empty($releaseDate) && !empty($category)) {
 
                 $manager = $this->getDoctrine()->getManager();
 
                 $movie = new Movie();
                 $movie->setTitle($title);
                 $movie->setReleaseDate(new \DateTime($releaseDate));
+                $movie->setCategory($category);
 
                 $manager->persist($movie);
                 $manager->flush();
@@ -76,6 +88,12 @@ class MovieController extends AbstractController
                 return $this->redirectToRoute('movie_add');
             }
         }
+
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
+        return $this->render('movie/add.html.twig', [
+            "categories" => $categories
+        ]);
 
         return $this->render('movie/add.html.twig');
     }
