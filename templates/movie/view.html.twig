@@ -5,7 +5,7 @@
 {% block body %}
 
     <h1>{{ movie.title }}</h1>
-    <p> {{ movie.category.label }}</p>
+    <p> {{ movie.label }}</p>
     <p>Directed by {{ movie.director.name }}</p>
 
     {% if movie.award is not empty %}

@@ -40,8 +40,15 @@ class Movie {
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="actedMovies")
+     * @ORM\JoinTable(name="movie_actor")
      */
     private $actors;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="writtedMovies")
+     * @ORM\JoinTable(name="movie_writer")
+     */
+    private $writters;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Award", mappedBy="movie")
@@ -53,6 +60,7 @@ class Movie {
         $this->award = new ArrayCollection();
         $this->actors = new ArrayCollection();
         $this->category = new ArrayCollection();
+        $this->writters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,6 +182,32 @@ class Movie {
     {
         if ($this->category->contains($category)) {
             $this->category->removeElement($category);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Person[]
+     */
+    public function getWritters(): Collection
+    {
+        return $this->writters;
+    }
+
+    public function addWritter(Person $writter): self
+    {
+        if (!$this->writters->contains($writter)) {
+            $this->writters[] = $writter;
+        }
+
+        return $this;
+    }
+
+    public function removeWritter(Person $writter): self
+    {
+        if ($this->writters->contains($writter)) {
+            $this->writters->removeElement($writter);
         }
 
         return $this;

@@ -33,9 +33,15 @@ class Person {
      */
     private $actedMovies;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="writters")
+     */
+    private $writtedMovies;
+
     public function __construct()
     {
         $this->actedMovies = new ArrayCollection();
+        $this->writtedMovies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,6 +96,34 @@ class Person {
         if ($this->actedMovies->contains($actedMovie)) {
             $this->actedMovies->removeElement($actedMovie);
             $actedMovie->removeActor($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Movie[]
+     */
+    public function getWrittedMovies(): Collection
+    {
+        return $this->writtedMovies;
+    }
+
+    public function addWrittedMovie(Movie $writtedMovie): self
+    {
+        if (!$this->writtedMovies->contains($writtedMovie)) {
+            $this->writtedMovies[] = $writtedMovie;
+            $writtedMovie->addWritter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWrittedMovie(Movie $writtedMovie): self
+    {
+        if ($this->writtedMovies->contains($writtedMovie)) {
+            $this->writtedMovies->removeElement($writtedMovie);
+            $writtedMovie->removeWritter($this);
         }
 
         return $this;
