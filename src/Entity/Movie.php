@@ -39,7 +39,7 @@ class Movie {
     private $director;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Person")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="actedMovies")
      */
     private $actors;
 

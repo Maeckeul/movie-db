@@ -32,7 +32,17 @@
 
         {% for actors in movie.actors %}
 
-        <li>{{ actors.name }}</li>
+        <li>
+            {{ actors.name }}
+            <p>
+                A aussi joué dans :
+                <ul>
+                    {% for actedMovie in actors.actedMovies %}
+                       <li>{{ actedMovie.title }}</li> 
+                    {% endfor %}
+                </ul>
+            </p>
+        </li>
 
         {% endfor %}
 
