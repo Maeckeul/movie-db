@@ -39,6 +39,11 @@ class Movie {
     private $director;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Person")
+     */
+    private $actors;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Award", mappedBy="movie")
      */
     private $award;
@@ -46,6 +51,7 @@ class Movie {
     public function __construct()
     {
         $this->award = new ArrayCollection();
+        $this->actors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,6 +133,32 @@ class Movie {
             if ($award->getMovie() === $this) {
                 $award->setMovie(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Person[]
+     */
+    public function getActors(): Collection
+    {
+        return $this->actors;
+    }
+
+    public function addActor(Person $actor): self
+    {
+        if (!$this->actors->contains($actor)) {
+            $this->actors[] = $actor;
+        }
+
+        return $this;
+    }
+
+    public function removeActor(Person $actor): self
+    {
+        if ($this->actors->contains($actor)) {
+            $this->actors->removeElement($actor);
         }
 
         return $this;

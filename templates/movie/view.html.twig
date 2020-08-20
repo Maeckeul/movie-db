@@ -26,4 +26,22 @@
 
     {% endif %}
 
+    {% if movie.actors is not empty %}
+
+    <ul>
+
+        {% for actors in movie.actors %}
+
+        <li>{{ actors.name }}</li>
+
+        {% endfor %}
+
+    </ul>
+
+    {% else %}
+
+    <p>Ce film n'a pas d'acteurs !</p>
+
+    {% endif %}
+
 {% endblock %}

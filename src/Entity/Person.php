@@ -26,6 +26,8 @@ class Person {
      */
     private $birthDate;
 
+    private $actedMovies;
+
     public function getId(): ?int
     {
         return $this->id;
