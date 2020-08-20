@@ -29,7 +29,7 @@ class Movie {
     private $releaseDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="movies")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="movies")
      */
     private $category;
 
@@ -52,6 +52,7 @@ class Movie {
     {
         $this->award = new ArrayCollection();
         $this->actors = new ArrayCollection();
+        $this->category = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -79,18 +80,6 @@ class Movie {
     public function setReleaseDate(\DateTimeInterface $releaseDate): self
     {
         $this->releaseDate = $releaseDate;
-
-        return $this;
-    }
-
-    public function getCategory(): ?Category
-    {
-        return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
 
         return $this;
     }
@@ -159,6 +148,32 @@ class Movie {
     {
         if ($this->actors->contains($actor)) {
             $this->actors->removeElement($actor);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategory(): Collection
+    {
+        return $this->category;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->category->contains($category)) {
+            $this->category[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->category->contains($category)) {
+            $this->category->removeElement($category);
         }
 
         return $this;

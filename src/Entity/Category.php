@@ -25,7 +25,7 @@ class Category
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Movie", mappedBy="category")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="category")
      */
     private $movies;
 
@@ -63,7 +63,7 @@ class Category
     {
         if (!$this->movies->contains($movie)) {
             $this->movies[] = $movie;
-            $movie->setCategory($this);
+            $movie->addCategory($this);
         }
 
         return $this;
@@ -75,7 +75,7 @@ class Category
             $this->movies->removeElement($movie);
             // set the owning side to null (unless already changed)
             if ($movie->getCategory() === $this) {
-                $movie->setCategory(null);
+                $movie->removeCategory($this);
             }
         }
 
