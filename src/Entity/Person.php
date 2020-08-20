@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM; 
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class Person {
+class Person
+{
 
     /**
      * @ORM\Id
@@ -29,19 +30,25 @@ class Person {
     private $birthDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="actors")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="writers")
      */
-    private $actedMovies;
+    private $writedMovies;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Movie", mappedBy="director")
+     */
+    private $directedMovies;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Movie", mappedBy="writters")
+     * @ORM\OneToMany(targetEntity=MovieActor::class, mappedBy="person", orphanRemoval=true)
      */
-    private $writtedMovies;
+    private $movieActors;
 
     public function __construct()
     {
-        $this->actedMovies = new ArrayCollection();
-        $this->writtedMovies = new ArrayCollection();
+        $this->writedMovies = new ArrayCollection();
+        $this->directedMovies = new ArrayCollection();
+        $this->movieActors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,57 +80,92 @@ class Person {
         return $this;
     }
 
-    /**
-     * @return Collection|Movie[]
-     */
-    public function getActedMovies(): Collection
-    {
-        return $this->actedMovies;
-    }
-
-    public function addActedMovie(Movie $actedMovie): self
-    {
-        if (!$this->actedMovies->contains($actedMovie)) {
-            $this->actedMovies[] = $actedMovie;
-            $actedMovie->addActor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActedMovie(Movie $actedMovie): self
-    {
-        if ($this->actedMovies->contains($actedMovie)) {
-            $this->actedMovies->removeElement($actedMovie);
-            $actedMovie->removeActor($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Movie[]
      */
-    public function getWrittedMovies(): Collection
+    public function getWritedMovies(): Collection
     {
-        return $this->writtedMovies;
+        return $this->writedMovies;
     }
 
-    public function addWrittedMovie(Movie $writtedMovie): self
+    public function addWritedMovie(Movie $writedMovie): self
     {
-        if (!$this->writtedMovies->contains($writtedMovie)) {
-            $this->writtedMovies[] = $writtedMovie;
-            $writtedMovie->addWritter($this);
+        if (!$this->writedMovies->contains($writedMovie)) {
+            $this->writedMovies[] = $writedMovie;
+            $writedMovie->addWriter($this);
         }
 
         return $this;
     }
 
-    public function removeWrittedMovie(Movie $writtedMovie): self
+    public function removeWritedMovie(Movie $writedMovie): self
     {
-        if ($this->writtedMovies->contains($writtedMovie)) {
-            $this->writtedMovies->removeElement($writtedMovie);
-            $writtedMovie->removeWritter($this);
+        if ($this->writedMovies->contains($writedMovie)) {
+            $this->writedMovies->removeElement($writedMovie);
+            $writedMovie->removeWriter($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Movie[]
+     */
+    public function getDirectedMovies(): Collection
+    {
+        return $this->directedMovies;
+    }
+
+    public function addDirectedMovie(Movie $directedMovie): self
+    {
+        if (!$this->directedMovies->contains($directedMovie)) {
+            $this->directedMovies[] = $directedMovie;
+            $directedMovie->setDirector($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDirectedMovie(Movie $directedMovie): self
+    {
+        if ($this->directedMovies->contains($directedMovie)) {
+            $this->directedMovies->removeElement($directedMovie);
+            // set the owning side to null (unless already changed)
+            if ($directedMovie->getDirector() === $this) {
+                $directedMovie->setDirector(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MovieActor[]
+     */
+    public function getMovieActors(): Collection
+    {
+        return $this->movieActors;
+    }
+
+    public function addMovieActor(MovieActor $movieActor): self
+    {
+        if (!$this->movieActors->contains($movieActor)) {
+            $this->movieActors[] = $movieActor;
+            $movieActor->setPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMovieActor(MovieActor $movieActor): self
+    {
+        if ($this->movieActors->contains($movieActor)) {
+            $this->movieActors->removeElement($movieActor);
+            // set the owning side to null (unless already changed)
+            if ($movieActor->getPerson() === $this) {
+                $movieActor->setPerson(null);
+            }
         }
 
         return $this;

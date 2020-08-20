@@ -8,8 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * Page d'accueil
-     * 
      * @Route("/", name="homepage")
      */
     public function homepage()

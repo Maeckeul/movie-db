@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} - Movie Remove {% endblock %}
-
 {% block body %}
 
 <h1>Modifier un film</h1>
@@ -19,7 +17,7 @@
         <option value="{{ person.id }}" {{ person.id == movie.director.id ? "selected" : "" }}>{{ person.name }}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="Sauvegarder"/>
+    <input type="submit" value="Enregistrer" />
 </form>
 
 {% endblock %}

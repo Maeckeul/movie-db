@@ -2,17 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\AwardRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=AwardRepository::class)
+ * @ORM\Entity
  */
-class Award
-{
+class Award {
+
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
+     * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
     private $id;
@@ -20,15 +19,10 @@ class Award
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $title;
+    private $label;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $year;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="award")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="awards")
      */
     private $movie;
 
@@ -37,26 +31,14 @@ class Award
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getLabel(): ?string
     {
-        return $this->title;
+        return $this->label;
     }
 
-    public function setTitle(string $title): self
+    public function setLabel(string $label): self
     {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getYear(): ?int
-    {
-        return $this->year;
-    }
-
-    public function setYear(int $year): self
-    {
-        $this->year = $year;
+        $this->label = $label;
 
         return $this;
     }
