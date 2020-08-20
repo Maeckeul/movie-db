@@ -29,11 +29,11 @@ class MovieController extends AbstractController
     /**
      * @Route("/{id}/view", name="movie_view", requirements={"id" = "\d+"}, methods={"GET"})
      */
-    public function view(Movie $movie)
+    public function view($id)
     {
         // Pas besoin car on utilise le paramConverter de Doctrine
         // il s'occupe de recuperer mon entité grace aux parametres de la route
-        // $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
+        $movie = $this->getDoctrine()->getRepository(Movie::class)->findWithActors($id);
 
         if(!$movie) {
             throw $this->createNotFoundException("Ce film n'existe pas !");
