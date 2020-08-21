@@ -19,7 +19,10 @@ class MovieController extends AbstractController
      * @Route("/list", name="movie_list", methods={"GET"})
      */
     public function list() {
-        $movies = $this->getDoctrine()->getRepository(Movie::class)->findAll();
+        $movies = $this->getDoctrine()->getRepository(Movie::class)->findBy(
+            [],
+            ["title" => "asc"]
+        );
         
         return $this->render('movie/list.html.twig', [
             "movies" => $movies
@@ -33,7 +36,7 @@ class MovieController extends AbstractController
     {
         // Pas besoin car on utilise le paramConverter de Doctrine
         // il s'occupe de recuperer mon entité grace aux parametres de la route
-        $movie = $this->getDoctrine()->getRepository(Movie::class)->findWithActors($id);
+        $movie = $this->getDoctrine()->getRepository(Movie::class)->findWithFullData($id);
 
         if(!$movie) {
             throw $this->createNotFoundException("Ce film n'existe pas !");
