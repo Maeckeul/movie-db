@@ -4,8 +4,21 @@
     {{ parent() }} - Films
 {% endblock %}
 
-{% block body %}
-<h1 class="mt-5">Films</h1>
+{% block body %} 
+
+<div class="row mt-5">
+    <div class="col-md-7">
+        <h1>Films</h1>
+    </div>
+    <div class="col-md-5">
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" name="search" placeholder="Rechercher un film" aria-label="search"/>
+            <button class="btn btn-outline-success my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+    </div>
+</div>
+    
+
 <div class="list-group mt-5">
     {% for movie in movies %}
     <a href="{{ path('movie_view', {'id': movie.id}) }}" class="list-group-item list-group-item-action">

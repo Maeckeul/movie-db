@@ -13,6 +13,15 @@ class MovieRepository extends ServiceEntityRepository
         parent::__construct($registry, Movie::class);
     }
 
+    public function findByPartialTitle($partialTitle) {
+
+        $builder = $this->createQueryBuilder('movie');
+        $builder->where("movie.title LIKE :partialTitle");
+        $builder->setParameter('partialTitle', "%$partialTitle%");
+        $query = $builder->getQuery();
+        return $query->execute();
+    }
+
     public function findWithFullData($id) {
 
         $builder = $this->createQueryBuilder('movie');
