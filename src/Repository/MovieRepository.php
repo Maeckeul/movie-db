@@ -18,6 +18,10 @@ class MovieRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('movie');
         $builder->where("movie.id = :id");
         $builder->setParameter('id', $id);
+        $builder->leftJoin('movie.movieActors', 'actor');
+        $builder->addSelect('actor');
+        $builder->leftJoin('actor.person', 'person');
+        $builder->addSelect('person');
 
         $query = $builder->getQuery();
         $result = $query->getOneOrNullResult();
