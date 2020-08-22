@@ -30,9 +30,10 @@ class MovieController extends AbstractController
         */
 
         $movies = $this->getDoctrine()->getRepository(Movie::class)->findByPartialTitle($search);
-        
+
         return $this->render('movie/list.html.twig', [
-            "movies" => $movies
+            "movies" => $movies,
+            "search" => $search
         ]);
     }
 

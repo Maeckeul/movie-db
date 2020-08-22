@@ -18,6 +18,7 @@ class MovieRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('movie');
         $builder->where("movie.title LIKE :partialTitle");
         $builder->setParameter('partialTitle', "%$partialTitle%");
+        $builder->orderBy('movie.title', 'ASC');
         $query = $builder->getQuery();
         return $query->execute();
     }
