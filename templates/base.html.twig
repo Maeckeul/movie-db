@@ -26,11 +26,15 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
+            <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="{{ path('category_list') }}">Categories</a>
                 <a class="nav-item nav-link" href="{{ path('movie_list') }}">Films</a>
                 <a class="nav-item nav-link" href="{{ path('post_list') }}">Blog</a>
             </div>
+            <form class="form-inline my-2 my-lg-0" action="{{ path('movie_list') }}">
+                <input class="form-control mr-sm-2" type="search" name="search" placeholder="Rechercher un film" aria-label="Search" value="{{ app.request.get('search') }}"/>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+            </form>
         </div>
     </nav>
     <div class="container">
