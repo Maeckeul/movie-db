@@ -11,6 +11,7 @@
     {% if app.request.get('search') %}
     <div class="alert alert-info" role="alert">
         Resultat de la recherche pour : "{{ app.request.get('search') }}"
+        <a href="{{ path('movie_list') }}" class="alert-link">Annuler la recherche</a>
     </div>
     {% endif %}
     <div class="list-group mt-5">
