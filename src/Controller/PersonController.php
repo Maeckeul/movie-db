@@ -14,8 +14,9 @@ class PersonController extends AbstractController
     /**
      * @Route("/{id}/view", name="person_view", requirements={"id" = "\d+"}, methods={"GET"})
      */
-    public function viewCategory(Person $person)
-    {
+    public function viewCategory($id)
+    {   
+        $person = $this->getDoctrine()->getRepository(Person::class)->findWithFullData($id);
         return $this->render('person/view.html.twig', [
             'person' => $person,
         ]);
