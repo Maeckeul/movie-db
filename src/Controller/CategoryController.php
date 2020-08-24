@@ -6,6 +6,7 @@ use App\Entity\Category;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -40,12 +41,26 @@ class CategoryController extends AbstractController
     /**
      * @Route("/add", name="category_add", methods={"GET", "POST"})
      */
-    public function addCategory()
+    public function addCategory(Request $request)
     {
-        $builder = $this->createFormBuilder();
+        $newCategory = new Category();
+
+        $builder = $this->createFormBuilder($newCategory);
         $builder->add("label", TextType::class);
         $builder->add("submit", SubmitType::class, ["label" => "Valider"]);
         $form = $builder->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            // $data = $form->getData();
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($newCategory);
+            $manager->flush();
+            
+            return $this->redirectToRoute('category_list');
+        }
 
         return $this->render(
             'category/add.html.twig',
