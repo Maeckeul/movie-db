@@ -46,7 +46,7 @@ class CategoryController extends AbstractController
         $newCategory = new Category();
 
         $builder = $this->createFormBuilder($newCategory);
-        $builder->add("label", TextType::class);
+        $builder->add("label", TextType::class, ["label" => "Nom de la catégorie"]);
         $builder->add("submit", SubmitType::class, ["label" => "Valider"]);
         $form = $builder->getForm();
 
