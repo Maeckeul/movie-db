@@ -10,6 +10,12 @@
 
 <h1 class="mt-5">Créer une nouvelle catégorie</h1>
 
-{{ form(form) }}
+{{ form_start(form) }}
+
+{{form_widget(form) }}
+
+<button class="btn btn-primary" type="submit">Valider</button>
+
+{{ form_end(form) }}
 
 {% endblock %}

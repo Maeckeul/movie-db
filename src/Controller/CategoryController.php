@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Form\CategoryType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,10 +46,14 @@ class CategoryController extends AbstractController
     {
         $newCategory = new Category();
 
+        /*
         $builder = $this->createFormBuilder($newCategory);
         $builder->add("label", TextType::class, ["label" => "Nom de la catégorie"]);
         $builder->add("submit", SubmitType::class, ["label" => "Valider"]);
         $form = $builder->getForm();
+        */
+
+        $form = $this->createForm(CategoryType::class, $newCategory);
 
         $form->handleRequest($request);
 
