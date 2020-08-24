@@ -7,8 +7,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PersonRepository;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
+ * @UniqueEntity(
+ *     fields={"name"},
+ *     message="Cette personne est déjà repertoriée !")
  */
 class Person
 {
@@ -22,11 +28,15 @@ class Person
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez entrer un Prénom et un Nom (ex: Joe Lahouille)")
+     * @Assert\Length(min=2, max=255)
      */
     private $name;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\Type("DateTime")
+     * @Assert\NotBlank(message="Veuillez entrer une Date de Naissance (ex: 31/02/2000)")
      */
     private $birthDate;
 
@@ -74,7 +84,7 @@ class Person
         return $this->birthDate;
     }
 
-    public function setBirthDate(\DateTimeInterface $birthDate): self
+    public function setBirthDate(?\DateTimeInterface $birthDate): self
     {
         $this->birthDate = $birthDate;
 

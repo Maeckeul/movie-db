@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block body %}
-<h1 class="mt-5">{{ person.name }}</h1>
+<a class="btn btn-primary mt-5" href="{{ path('person_update', {'id' : person.id}) }}">Modifier une personne</a>
+<h1 class="mt-3">{{ person.name }}</h1>
 Né(e) le {{ person.birthDate | date('d/m/Y')}}
 
 {% if person.movieActors is not empty %}
