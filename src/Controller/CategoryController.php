@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,6 +35,24 @@ class CategoryController extends AbstractController
         return $this->render('category/list.html.twig', [
             'categories' => $categories,
         ]);
+    }
+
+    /**
+     * @Route("/add", name="category_add", methods={"GET", "POST"})
+     */
+    public function addCategory()
+    {
+        $builder = $this->createFormBuilder();
+        $builder->add("label", TextType::class);
+        $builder->add("submit", SubmitType::class, ["label" => "Valider"]);
+        $form = $builder->getForm();
+
+        return $this->render(
+            'category/add.html.twig',
+            [
+                "form" => $form->createView()
+            ]
+        );
     }
 
 }
