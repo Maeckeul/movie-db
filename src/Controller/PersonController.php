@@ -70,9 +70,32 @@ class PersonController extends AbstractController
 
         return $this->render(
             'person/update.html.twig',
-            [
+            [   
+                "person" => $person,
                 "form" => $form->createView()
             ]
         );
+    }
+
+    /**
+     * @Route("/{id}/delete", name="person_delete", requirements={"id" = "\d+"}, methods={"GET"})
+     */
+    public function deletePerson(Person $person) 
+    {
+        $personName = $person->getName();
+
+        if(!$person->getDirectedMovies()->isEmpty()) {
+
+            $this->addFlash("warning", "Impossible de supprimer $personName car il/elle est réalisateur/réalisatrice !");
+            return $this->redirectToRoute('person_update', ['id' => $person->getId()]);
+        }
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($person);
+        $manager->flush();
+
+        $this->addFlash("danger", "$personName a été supprimée !");
+            
+        return $this->redirectToRoute('homepage');
     }
 }

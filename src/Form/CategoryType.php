@@ -16,7 +16,7 @@ class CategoryType extends AbstractType
             'label', 
             TextType::class,
             [
-                "label" => "Nom de la Catégorie"
+                "label" => "Nom de la nouvelle Catégorie"
             ]);
     }
 

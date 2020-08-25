@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,8 +61,10 @@ class CategoryController extends AbstractController
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($newCategory);
             $manager->flush();
+
+            $this->addFlash("success", "La Catégorie " . $newCategory->getLabel() . " a été créee !");
             
-            return $this->redirectToRoute('category_list');
+            return $this->redirectToRoute('category_list', ['id' => $newCategory->getId()]);
         }
 
         return $this->render(
@@ -73,5 +73,48 @@ class CategoryController extends AbstractController
                 "form" => $form->createView()
             ]
         );
+    }
+
+    /**
+     * @Route("/{id}/update", name="category_update", requirements={"id" = "\d+"}, methods={"GET", "POST"})
+     */
+    public function updateCategory(Request $request, Category $category)
+    {
+        $form = $this->createForm(CategoryType::class, $category);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            // $data = $form->getData();
+            $manager = $this->getDoctrine()->getManager();
+            $manager->flush();
+
+            $this->addFlash("success", "La Catégorie " . $category->getLabel() . " a été modifiée !");
+            
+            return $this->redirectToRoute('category_view', ['id' => $category->getId()]);
+        }
+
+        return $this->render(
+            'category/update.html.twig',
+            [
+                "category" => $category,
+                "form" => $form->createView()
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{id}/delete", name="category_delete", requirements={"id" = "\d+"}, methods={"GET"})
+     */
+    public function deleteCategory(Category $category) 
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($category);
+        $manager->flush();
+
+        $this->addFlash("danger", "La Catégorie " . $category->getLabel() . " a été supprimée !");
+            
+        return $this->redirectToRoute('category_list');
     }
 }
