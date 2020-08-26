@@ -2,19 +2,20 @@
 
 {% block title %}
 
-    {{ parent() }} - Créer une catégorie
+    {{ parent() }} - Ajouter une catégorie
 
 {% endblock %}
 
 {% block body %}
 
-<h1 class="mt-5">Créer une nouvelle catégorie</h1>
+<h1 class="mt-5">Ajouter une nouvelle catégorie</h1>
 
 {{ form_start(form) }}
 
 {{ form_widget(form) }}
 
-<button class="btn btn-primary" type="submit">Créer</button>
+<a class="btn btn-primary" href="{{ path('category_list') }}">Annuler</a>
+<button class="btn btn-primary" type="submit">Ajouter</button>
 
 {{ form_end(form) }}
 

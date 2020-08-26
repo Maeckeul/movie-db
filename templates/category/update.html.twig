@@ -19,7 +19,7 @@
 
 {{ form_widget(form) }}
 
-<a class="btn btn-primary" href="{{ path('category_list', {'id' : category.id}) }}">Annuler</a>
+<a class="btn btn-primary" href="{{ path('category_view', {'id' : category.id}) }}">Annuler</a>
 <button class="btn btn-primary" type="submit">Modifier</button>
 
 {{ form_end(form) }}

@@ -1,23 +1,27 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+
+    {{ parent() }} - Modifier un Film
+
+{% endblock %}
+
 {% block body %}
 
-<h1>Modifier un film</h1>
+<div class="d-flex justify-content-between align-items-start mt-5">
+    <h1>Modifier {{ movie.title }}</h1>
+    <a href="{{ path('movie_delete', {'id' : movie.id}) }}" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce film ?')">
+        Supprimer {{movie.title }}
+    </a>
+</div>
 
-<form method="POST">
-    <input type="text" name="title" value="{{ movie.title }}"/>
-    <input type="date" name="releaseDate" value="{{ movie.releaseDate | date('Y-m-d') }}"/>
-    <select name="categoryId">
-        {% for category in categories %}
-        <option value="{{ category.id }}" {{ category.id == movie.category.id ? "selected" : "" }}>{{ category.label }}</option>
-        {% endfor %}
-    </select>
-    <select name="personId">
-        {% for person in persons %}
-        <option value="{{ person.id }}" {{ person.id == movie.director.id ? "selected" : "" }}>{{ person.name }}</option>
-        {% endfor %}
-    </select>
-    <input type="submit" value="Enregistrer" />
-</form>
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+
+<a class="btn btn-primary" href="{{ path('movie_view', {'id' : movie.id}) }}">Annuler</a>
+<button class="btn btn-primary" type="submit">Modifier</button>
+
+{{ form_end(form) }}
 
 {% endblock %}

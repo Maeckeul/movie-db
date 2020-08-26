@@ -6,6 +6,7 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MovieRepository::class)
@@ -22,21 +23,27 @@ class Movie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Length(max=255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="date")
+     * @Assert\NotNull
+     * @Assert\Type(\DateTime::class)
      */
     private $releaseDate;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="movies")
+     * @Assert\Count(min=1, max=4)
      */
     private $categories;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Person", inversedBy="directedMovies")
+     * @Assert\NotNull
      */
     private $director;
 
@@ -44,6 +51,7 @@ class Movie
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Person", inversedBy="writedMovies")
      * @ORM\JoinTable(name="movie_writer")
+     * @Assert\Count(min=1)
      */
     private $writers;
 
@@ -65,15 +73,14 @@ class Movie
     private $movieActors;
 
     public function __construct()
-    {
-        $this->awards = new ArrayCollection();
+    {   
         $this->category = new ArrayCollection();
-        $this->writers = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->writers = new ArrayCollection();
+        $this->awards = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->movieActors = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {
@@ -104,6 +111,31 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+        }
+
+        return $this;
+    }
 
     public function getDirector(): ?Person
     {
@@ -113,6 +145,32 @@ class Movie
     public function setDirector(?Person $director): self
     {
         $this->director = $director;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Person[]
+     */
+    public function getWriters(): Collection
+    {
+        return $this->writers;
+    }
+
+    public function addWriter(Person $writer): self
+    {
+        if (!$this->writers->contains($writer)) {
+            $this->writers[] = $writer;
+        }
+
+        return $this;
+    }
+
+    public function removeWriter(Person $writer): self
+    {
+        if ($this->writers->contains($writer)) {
+            $this->writers->removeElement($writer);
+        }
 
         return $this;
     }
@@ -143,59 +201,6 @@ class Movie
             if ($award->getMovie() === $this) {
                 $award->setMovie(null);
             }
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * @return Collection|Person[]
-     */
-    public function getWriters(): Collection
-    {
-        return $this->writers;
-    }
-
-    public function addWriter(Person $writer): self
-    {
-        if (!$this->writers->contains($writer)) {
-            $this->writers[] = $writer;
-        }
-
-        return $this;
-    }
-
-    public function removeWriter(Person $writer): self
-    {
-        if ($this->writers->contains($writer)) {
-            $this->writers->removeElement($writer);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self
-    {
-        if ($this->categories->contains($category)) {
-            $this->categories->removeElement($category);
         }
 
         return $this;
@@ -259,4 +264,5 @@ class Movie
 
         return $this;
     }
+    
 }

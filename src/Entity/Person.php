@@ -8,13 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PersonRepository;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=PersonRepository::class)
- * @UniqueEntity(
- *     fields={"name"},
- *     message="Cette personne est déjà repertoriée !")
  */
 class Person
 {

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Movie;
 use App\Entity\Person;
+use App\Form\MovieType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,90 +59,43 @@ class MovieController extends AbstractController
     /**
      * @Route("/add", name="movie_add", methods={"GET", "POST"})
      */
-    public function add(Request $request) {
+    public function add(Request $request) 
+    {
+        $movie = new Movie();
 
-        if($request->getMethod() == Request::METHOD_POST) {
+        $form = $this->createForm(MovieType::class, $movie);
+        $form->handleRequest($request);
+            
+        if($form->isSubmitted() && $form->isValid()) {
+                
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($movie);
+            $manager->flush();
 
-            $title = $request->request->get('title');
-            if(empty($title)) {
-                $this->addFlash('warning', 'Le titre ne peut pas être vide !');
-            }
-
-            $releaseDate = $request->request->get('releaseDate');
-            if(empty($releaseDate)) {
-                $this->addFlash('warning', 'La date de sortie ne peut pas être vide !');
-            }
-
-            $categoryId = intval($request->request->get('categoryId'));
-            if(empty($categoryId)) {
-                $this->addFlash('warning', "La catégorie n'est pas valide !");
-            }
-
-            // je recupère la categorie correspondant a cet id
-            $category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
-            if(empty($category)) {
-                $this->addFlash('warning', "La catégorie séléctionnée n'existe pas !");
-            }
-
-            $personId = intval($request->request->get('personId'));
-            $person = $this->getDoctrine()->getRepository(Person::class)->find($personId);
-            if(empty($person)) {
-                $this->addFlash('warning', "La personne séléctionnée n'existe pas !");
-            }
-
-            // Si les données sont bonnes 
-            if(!empty($title) && !empty($releaseDate) && !empty($category) && !empty($person)) {
-                // je recup le manager qui va persister mon entité
-                $manager = $this->getDoctrine()->getManager();
-                // Alors on crée une nouvelle entité qui contient ces données
-                $movie = new Movie();
-                $movie->setTitle($title);
-                $movie->setReleaseDate(new \DateTime($releaseDate));
-                // je lie l'objet category a l'objet movie, doctrine s'occupe de mettre dans la BDD les ID correspondant a cette ralation dans les colonne de clé étrangere
-                $movie->addCategory($category);
-                $movie->setDirector($person);
-                // Et l'ajouter en BDD
-                // je dit au manager qu'il y a une nouvelle entité à gerer
-                $manager->persist($movie);
-                // je demande au manager de pousser dans la BDD toute les modifications ou ajout d'entités
-                $manager->flush();
-
-                // je demande au navigateur d'aller sur la liste de films
-                // permet d'aviter les double soumission de formulaire et le "back" du navigateur
-                return $this->redirectToRoute('movie_list');
-            }
-
+            return $this->redirectToRoute('movie_view', ['id' => $movie->getId()]);
         }
-        
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
-        $persons = $this->getDoctrine()->getRepository(Person::class)->findAll();
 
-        return $this->render('movie/add.html.twig', [
-            "categories" => $categories,
-            "persons" => $persons
-        ]);
+        return $this->render(
+            'movie/add.html.twig', 
+            [
+                "movie" => $movie,
+                "form" => $form->createView()
+            ]
+        );
     }
 
     
     /**
      * @Route("/{id}/delete", name="movie_delete", methods={"GET"})
      */
-    public function delete($id) {
-        // je recupère mon entité
-        $movie = $this->getDoctrine()->getRepository(Movie::class)->find($id);
-        
-        // si le film n'éxiste pas on renvoi sur une 404
-        if(!$movie) {
-            throw $this->createNotFoundException("Ce film n'existe pas !");
-        }
-
-        // je demande le manager
+    public function delete(Movie $movie) 
+    {
         $manager = $this->getDoctrine()->getManager();
-        // je dit au manager que cette entité devra faire l'objet d'une suppression
         $manager->remove($movie);
-        // je demande au manager d'executer dans la BDD toute les modifications qui ont été faites sur les entités
         $manager->flush();
-        // On retourne sur la liste des films
+
+        $this->addFlash("danger", "Le Film " . $movie->getTitle() . " a été supprimé !");
+            
         return $this->redirectToRoute('movie_list');
     }
 
@@ -151,66 +105,25 @@ class MovieController extends AbstractController
      */
     public function update(Movie $movie, Request $request)
     {
-        if(!$movie) {
-            throw $this->createNotFoundException("Ce film n'existe pas !");
-        }
-
-        
-        if($request->getMethod() == Request::METHOD_POST) {
+        $form = $this->createForm(MovieType::class, $movie);
+        $form->handleRequest($request);
             
-            $title = $request->request->get('title');
-            if(empty($title)) {
-                $this->addFlash('warning', 'Le titre ne peut pas être vide !');
-            }
-            $releaseDate = $request->request->get('releaseDate');
-            if(empty($releaseDate)) {
-                $this->addFlash('warning', 'La date de sortie ne peut pas être vide !');
-            }
+        if($form->isSubmitted() && $form->isValid()) {
+                
+            $manager = $this->getDoctrine()->getManager();
+            $manager->flush();
 
-            $categoryId = intval($request->request->get('categoryId'));
-            if(empty($categoryId)) {
-                $this->addFlash('warning', "La catégorie n'est pas valide !");
-            }
+            $this->addFlash("success", "Le Film " . $movie->getTitle() . " a été modifié !");
 
-            // je recupère la categorie correspondant a cet id
-            $category = $this->getDoctrine()->getRepository(Category::class)->find($categoryId);
-            if(empty($category)) {
-                $this->addFlash('warning', "La catégorie séléctionnée n'existe pas !");
-            }
-
-            $personId = intval($request->request->get('personId'));
-            $person = $this->getDoctrine()->getRepository(Person::class)->find($personId);
-            if(empty($person)) {
-                $this->addFlash('warning', "La personne séléctionnée n'existe pas !");
-            }
-
-            if(!empty($title) && !empty($releaseDate) && !empty($category) && !empty($person)) {
-                // je recup le manager qui va persister mon entité
-                $manager = $this->getDoctrine()->getManager();
-                // Alors on crée une nouvelle entité qui contient ces données
-                $movie->setTitle($title);
-                $movie->setReleaseDate(new \DateTime($releaseDate));
-                // je lie l'objet category a l'objet movie, doctrine s'occupe de mettre dans la BDD les ID correspondant a cette ralation dans les colonne de clé étrangere
-                $movie->addCategory($category);
-                $movie->setDirector($person);
-                // je demande au manager de pousser dans la BDD toute les modifications ou ajout d'entités
-                $manager->flush();
-
-                // je demande au navigateur d'aller sur la liste de films
-                // permet d'aviter les double soumission de formulaire et le "back" du navigateur
-                return $this->redirectToRoute('movie_list');
-            }
-
+            return $this->redirectToRoute('movie_view', ['id' => $movie->getId()]);
         }
 
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
-        $persons = $this->getDoctrine()->getRepository(Person::class)->findAll();
-
-        return $this->render('movie/update.html.twig', [
-            'movie' => $movie,
-            "categories" => $categories,
-            "persons" => $persons
-        ]);
+        return $this->render(
+            'movie/update.html.twig', 
+            [
+                "movie" => $movie,
+                "form" => $form->createView()
+            ]
+        );
     }
-
 }
