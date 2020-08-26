@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    {{ parent() }} - Ajouter un article
+
+{% endblock %}
+
+{% block body %}
+    <h1 class="mt-5">Créer un nouvelle article</h1>
+
+    {{ include('post/_form.html.twig') }}
+
+    <a href="{{ path('post_index') }}" class="btn btn-primary">Revenir à la liste</a>
+{% endblock %}
