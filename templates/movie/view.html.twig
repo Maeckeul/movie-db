@@ -11,6 +11,10 @@
     <a href="{{ path('movie_update', {'id' : movie.id}) }}" class="btn btn-primary">Modifier le film {{ movie.title }}</a>
 </div>
 
+{% if(movie.imageFileName is not empty) %}
+    <img src="{{ asset('uploads/movie_images/' ~ movie.imageFileName) }}">
+{% endif %}
+
 <dl class="mt-5">
     {% if movie.releaseDate is not empty %}
     <dt>Date de sortie</dt>

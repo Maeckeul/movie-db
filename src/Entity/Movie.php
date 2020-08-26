@@ -29,6 +29,11 @@ class Movie
     private $title;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageFilename;
+
+    /**
      * @ORM\Column(type="date")
      * @Assert\NotNull
      * @Assert\Type(\DateTime::class)
@@ -261,6 +266,18 @@ class Movie
                 $movieActor->setMovie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageFilename(): ?string
+    {
+        return $this->imageFilename;
+    }
+
+    public function setImageFilename(?string $imageFilename): self
+    {
+        $this->imageFilename = $imageFilename;
 
         return $this;
     }

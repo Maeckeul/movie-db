@@ -8,9 +8,11 @@ use App\Entity\Person;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 
 class MovieType extends AbstractType
 {
@@ -18,6 +20,17 @@ class MovieType extends AbstractType
     {
         $builder->add('title', TextType::class, [
             "label" => "Titre"
+        ]);
+
+        $builder->add('imageFile', FileType::class, [
+            "label" => "Affiche",
+            "mapped" => false,
+            "required" => false,
+            'constraints' => [
+            new Image([
+                'maxSize' => '1024k',
+                ])
+            ]
         ]);
 
         $builder->add('releaseDate', DateType::class, [
