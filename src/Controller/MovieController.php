@@ -125,6 +125,22 @@ class MovieController extends AbstractController
         $form->handleRequest($request);
             
         if($form->isSubmitted() && $form->isValid()) {
+
+            /**
+             * @var UploadedFile $imageFile 
+             */
+            $imageFile = $form->get('imageFile')->getData();
+            if($imageFile) {
+
+                $fileName = uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('movie_image_directory'),
+                    $fileName
+                );
+
+                $movie->setImageFilename($fileName);
+            }
                 
             $manager = $this->getDoctrine()->getManager();
             $manager->flush();
