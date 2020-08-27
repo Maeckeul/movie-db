@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MovieActorRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MovieActorRepository::class)
@@ -19,6 +20,8 @@ class MovieActor
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * @Assert\Length(max=255)
      */
     private $characterName;
 
@@ -31,6 +34,7 @@ class MovieActor
     /**
      * @ORM\ManyToOne(targetEntity=Person::class, inversedBy="movieActors")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull
      */
     private $person;
 
@@ -44,7 +48,7 @@ class MovieActor
         return $this->characterName;
     }
 
-    public function setCharacterName(string $characterName): self
+    public function setCharacterName(?string $characterName): self
     {
         $this->characterName = $characterName;
 

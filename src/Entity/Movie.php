@@ -73,7 +73,8 @@ class Movie
     private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity=MovieActor::class, mappedBy="movie", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=MovieActor::class, mappedBy="movie", orphanRemoval=true, cascade={"persist"})
+     * @Assert\Valid
      */
     private $movieActors;
 

@@ -19,9 +19,31 @@
 
 {{ form_widget(form) }}
 
-<a class="btn btn-primary" href="{{ path('movie_view', {'id' : movie.id}) }}">Annuler</a>
-<button class="btn btn-primary" type="submit">Modifier</button>
+<div class="mb-5">
+    <button type="button" class="btn btn-primary" onclick="createNewActorMovieForm()">Ajouter un acteur</button>
+    <a class="btn btn-primary" href="{{ path('movie_view', {'id' : movie.id}) }}">Annuler</a>
+    <button class="btn btn-primary" type="submit">Modifier</button>
+</div>
 
 {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+    const movieActorFormList = document.querySelector("#movie_movieActors");
+    const prototype = movieActorFormList.dataset.prototype;
+    let currentIndex = movieActorFormList.children.length;
+
+
+    function createNewActorMovieForm() {
+
+        const newElement = document.createElement('div');
+        newElement.innerHTML = prototype.replace(/__name__/g, currentIndex);
+        currentIndex ++;
+        movieActorFormList.appendChild(newElement);
+    }
+</script>
 
 {% endblock %}
