@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+    {{ parent() }} - Ajouter un Acteur
+
+{% endblock %}
+
+{% block body %}
+
+<h1 class="mt-5">Ajouter un nouvel Acteur</h1>
+<h3 class="mb-5">{{ movie.title }}</h2>
+
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+
+<a class="btn btn-primary" href="{{ path('movie_list') }}">Annuler</a>
+<button class="btn btn-primary" type="submit">Ajouter</button>
+
+{{ form_end(form) }}
+
+{% endblock %}

@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Movie;
+use App\Entity\MovieActor;
 use App\Entity\Person;
+use App\Form\MovieActorType;
 use App\Form\MovieType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -157,5 +159,31 @@ class MovieController extends AbstractController
                 "form" => $form->createView()
             ]
         );
+    }
+
+    /**
+     * @Route("/{id}/actor/add", name="movie_actor_add", requirements={"id" = "\d+"}, methods={"GET", "POST"})
+     */
+    public function addMovieActor(Movie $movie, Request $request)
+    {
+        $movieActor = new MovieActor();
+        $movieActor->setMovie($movie);
+
+        $form = $this->createForm(MovieActorType::class, $movieActor);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($movieActor);
+            $manager->flush();
+
+            return $this->redirectToRoute('movie_view', ['id' => $movie->getId()]);
+        }
+
+        return $this->render('movie/add_actor.html.twig', [
+            "movie" => $movie,
+            "form" => $form->createView()
+        ]);
     }
 }
