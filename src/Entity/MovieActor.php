@@ -38,6 +38,11 @@ class MovieActor
      */
     private $person;
 
+    public function __toString()
+    {
+        return $this->characterName;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

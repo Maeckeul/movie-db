@@ -1,0 +1,38 @@
+easy_admin:
+  site_name: 'MovieDB'
+  design: 
+      brand_color: '#b30424'
+      menu: 
+        - Movie
+        - Category
+  entities:
+        # List the entity class name you want to manage
+        Movie: 
+            class: App\Entity\Movie
+            list: 
+                fields:
+                    - id
+                    - title
+                    - releaseDate
+                    - director
+            form:
+                fields:
+                    - { type: 'group', columns: 6 }
+                    - title
+                    - releaseDate
+                    - imageFilename 
+                    - { type: 'group', columns: 6 }
+                    - categories
+                    - director
+                    - writers    
+                    - awards
+                    - { type: 'group', columns: 12 }
+                    - { property: 'movieActors', type: 'collection', type_options: { entry_type: App\Form\MovieActorType, entry_options: { label: false }, allow_add: true, by_reference: false } }               
+        Category:
+            class: App\Entity\Category
+        Person:
+            class: App\Entity\Person
+        Post:
+            class: App\Entity\Post
+        Award:
+            class: App\Entity\Award
