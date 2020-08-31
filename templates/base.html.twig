@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css')}}">
@@ -32,10 +32,39 @@
                 <a class="nav-item nav-link" href="{{ path('movie_list') }}">Films</a>
                 <a class="nav-item nav-link" href="{{ path('post_index') }}">Blog</a>
                 <a class="nav-item nav-link" href="{{ path('person_add') }}">Ajouter une Personne</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user mr-1" aria-hidden="true"></i>
+                        {% if app.user %}
+                            {{ app.user.email }}
+                        {% else %}
+                            Visiteur
+                        {% endif %}                
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% if app.user %}
+                            <span class="dropdown-item">
+                                {% if "ROLE_ADMIN" in app.user.roles %}
+                                    Administrateur
+                                {% else %}
+                                    Utilisateur
+                                {% endif %}
+                            </span>
+                            <div class="dropown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a>
+                        {% else %}
+                                <span class="dropdown-item">
+                                    Visiteur
+                                </span>
+                                <div class="dropown-divider"></div>
+                                <a class="dropdown-item" href="{{ path('app_login') }}">Connexion</a>
+                        {% endif %} 
+                    </div>
+                </li>
             </div>
             <form class="form-inline my-2 my-lg-0" action="{{ path('movie_list') }}">
                 <input class="form-control mr-sm-2" type="search" name="search" placeholder="Rechercher un film" aria-label="Search" value="{{ app.request.get('search') }}"/>
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
             </form>
         </div>
     </nav>
