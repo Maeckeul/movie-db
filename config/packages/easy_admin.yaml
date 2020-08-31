@@ -5,6 +5,9 @@ easy_admin:
       menu: 
         - Movie
         - Category
+        - User
+  user:
+      name_property_path: 'email'
   entities:
         # List the entity class name you want to manage
         Movie: 
@@ -36,3 +39,10 @@ easy_admin:
             class: App\Entity\Post
         Award:
             class: App\Entity\Award
+        User:
+            class: App\Entity\User
+            form:
+                fields: 
+                    - email
+                    - { property: 'roles', type: 'choice', type_options: { choices: { Utilisateur: 'ROLE_USER', Administrateur: 'ROLE_ADMIN' }, expanded: true, multiple: true } }
+                    - password
