@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Repository\MovieRepository;
 use App\Service\Slugger;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,11 +16,17 @@ class MovieSlugifyAllCommand extends Command
 {
     protected static $defaultName = 'app:movie:slugify-all';
 
+    private $em;
+    private $movieRepository;
     private $slugger;
 
-    public function __construct(Slugger $slugger)
+    public function __construct(EntityManagerInterface $em, MovieRepository $movieRepository, Slugger $slugger)
     {
+        parent::__construct();
+
+        $this->em = $em;
         $this->slugger = $slugger;
+        $this->movieRepository = $movieRepository;
     }
 
     protected function configure()
@@ -43,7 +51,16 @@ class MovieSlugifyAllCommand extends Command
             // ...
         // }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $movies = $this->movieRepository->findAll();
+
+        foreach($movies as $movie) {
+            $slug = $this->slugger->slugify($movie->getTitle());
+            $movie->setSlug($slug);
+        }
+
+        $this->em->flush();
+
+        $io->success('Tous les films ont maintenant un slug !');
 
         return Command::SUCCESS;
     }
