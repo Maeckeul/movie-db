@@ -8,6 +8,7 @@ use App\Entity\MovieActor;
 use App\Entity\Person;
 use App\Form\MovieActorType;
 use App\Form\MovieType;
+use App\Service\Slugger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +44,7 @@ class MovieController extends AbstractController
     /**
      * @Route("/{id}/view", name="movie_view", requirements={"id" = "\d+"}, methods={"GET"})
      */
-    public function view($id)
+    public function view($id, Slugger $slugger)
     {
         // Pas besoin car on utilise le paramConverter de Doctrine
         // il s'occupe de recuperer mon entité grace aux parametres de la route
@@ -61,7 +62,7 @@ class MovieController extends AbstractController
     /**
      * @Route("/add", name="movie_add", methods={"GET", "POST"})
      */
-    public function add(Request $request) 
+    public function add(Request $request, Slugger $slugger) 
     {
         $movie = new Movie();
 
@@ -69,6 +70,9 @@ class MovieController extends AbstractController
         $form->handleRequest($request);
             
         if($form->isSubmitted() && $form->isValid()) {
+
+            $slug = $slugger->slugify($movie->getTitle);
+            $movie->setSlug($slug);
 
             /**
              * @var UploadedFile $imageFile 
@@ -121,12 +125,15 @@ class MovieController extends AbstractController
     /**
      * @Route("/{id}/update", name="movie_update", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      */
-    public function update(Movie $movie, Request $request)
+    public function update(Movie $movie, Request $request, Slugger $slugger)
     {
         $form = $this->createForm(MovieType::class, $movie);
         $form->handleRequest($request);
             
         if($form->isSubmitted() && $form->isValid()) {
+
+            $slug = $slugger->slugify($movie->getTitle());
+            $movie->setSlug($slug);
 
             /**
              * @var UploadedFile $imageFile 

@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Movie;
 use App\Entity\Person;
+use App\Service\Slugger;
 use DateInterval;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -12,6 +13,13 @@ use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
+    private $slugger;
+        
+    public function __construct(Slugger $slugger)
+    {
+       $this->slugger = $slugger;     
+    }
+
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create("fr_FR");
@@ -40,7 +48,8 @@ class AppFixtures extends Fixture
         for($i=0; $i < 20; $i++) {
 
             $movie = new Movie();
-            $movie->setTitle($faker->catchPhrase);
+            $title = $movie->setTitle($faker->catchPhrase);
+            $movie->setSlug($this->slugger->slugify($title));
             $director = $personsList[mt_rand(0, count($personsList) - 1)];
             $movie->setDirector($director);
             $movie->setReleaseDate(
