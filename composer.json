@@ -34,7 +34,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
-        "fzaninotto/faker": "^1.9"
+        "fzaninotto/faker": "^1.9",
+        "nelmio/alice": "^3.7"
     },
     "config": {
         "optimize-autoloader": true,
