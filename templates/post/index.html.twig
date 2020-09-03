@@ -1,39 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post index{% endblock %}
+{% block title %}Liste d'articles{% endblock %}
 
 {% block body %}
-    <h1>Post index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="d-flex justify-content-between align-items-start mt-5">
+        <h1>Liste d'articles</h1>
+        <a href="{{ path('post_new') }}" class="btn btn-primary">Ajouter un article</a>
+    </div>
+
+    <div class="mt-5">
+        <div class="list-group mt-5">
         {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.content }}</td>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
-                </td>
-            </tr>
+                <a href="{{ path('post_show', {'id': post.id}) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+                    <p>{{ post.title }}</p>
+                    <p>{{ post.createdAt|date('Y-m-d') }}</p> 
+                </a>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+            <p colspan="5">Aucun article trouvé</p>
         {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
 
-    <a href="{{ path('post_new') }}">Create new</a>
 {% endblock %}
+

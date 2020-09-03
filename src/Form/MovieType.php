@@ -62,6 +62,7 @@ class MovieType extends AbstractType
 
         $builder->add('movieActors', CollectionType::class, [
             'entry_type' => MovieActorType::class,
+            'label' => false,
             'entry_options' => ['label' => false],
             'allow_add' => true,
             "by_reference" => false

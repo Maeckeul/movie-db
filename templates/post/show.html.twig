@@ -1,34 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post{% endblock %}
+{% block title %}Article n°{{ post.id }}
+{% endblock %}
 
 {% block body %}
-    <h1>Post</h1>
+	<div class="d-flex justify-content-between align-items-start mt-5">
+		<h1>Article n°{{ post.id }}</h1>
+		<a href="{{ path('post_edit', {'id' : post.id}) }}" class="btn btn-primary">Modifier l'article n°{{ post.id }}</a>
+	</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ post.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ post.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ post.content }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<dl class="mt-5">
+		{% if post.title is not empty %}
+			<dt>Titre</dt>
+			<dd>
+				{{ post.title }}
+			</dd>
+		{% endif %}
+		{% if post.content is not empty %}
+			<dt>Contenu</dt>
+			<dd>
+				{{ post.content }}
+			</dd>
+		{% endif %}
+		{% if post.createdAt is not empty %}
+			<dt>Date de création</dt>
+			<dd>
+				{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}
+			</dd>
+		{% endif %}
+	</dl>
 
-    <a href="{{ path('post_index') }}">back to list</a>
+	<a href="{{ path('post_index') }}" class="btn btn-primary">Revenir à la liste</a>
 
-    <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
-
-    {{ include('post/_delete_form.html.twig') }}
 {% endblock %}
