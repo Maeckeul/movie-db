@@ -1,0 +1,27 @@
+App\Entity\Movie:
+    movie_{1..120}:
+        title: '<catchPhrase()>'
+        releaseDate: '<dateTime()>'
+        categories: '<numberBetween(1,4)>x @category_*' # Associe ente 1 et 4 catégories au film
+        director: '@person_*'
+        writers: '<numberBetween(1,8)>x @person_*'
+
+App\Entity\Category:
+    category_{1..20}:
+        label: '<word()>'
+
+App\Entity\Person:
+    person_{1..40}:
+        name: '<name()>'
+        birthdate: '<dateTime()>'
+
+App\Entity\MovieActor:
+    movieActor_{1..300}:
+        characterName: '<firstName()>'
+        movie: '@movie_*'
+        person: '@person_*'
+
+App\Entity\Award:
+    award_{1..50}:
+        label: '<firstName()>'
+        movie: '@movie_*'
