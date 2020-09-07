@@ -48,6 +48,8 @@ class MovieController extends AbstractController
      */
     public function new(Request $request, ObjectNormalizer $objectNormalizer)
     {
+        // $user = $this->getUser();
+
         $movie = new Movie();
         
         $form = $this->createForm(MovieType::class, $movie);
