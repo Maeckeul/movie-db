@@ -6,6 +6,7 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -18,6 +19,7 @@ class Movie
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"api_v1_movies"})
      */
     private $id;
 
@@ -25,11 +27,13 @@ class Movie
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      * @Assert\Length(max=255)
+     * @Groups({"api_v1_movies"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"api_v1_movies"})
      */
     private $imageFilename;
 
@@ -37,12 +41,14 @@ class Movie
      * @ORM\Column(type="date")
      * @Assert\NotNull
      * @Assert\Type(\DateTime::class)
+     * @Groups({"api_v1_movies"})
      */
     private $releaseDate;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="movies")
      * @Assert\Count(min=1, max=4)
+     * @Groups({"api_v1_movies"})
      */
     private $categories;
 
@@ -305,4 +311,19 @@ class Movie
         return $this;
     }
     
+    /**
+     * @Groups({"api_v1_movies"})
+     */
+    public function getCountCategory()
+    {
+        return count($this->categories);
+    }
+
+    /**
+     * @Groups({"api_v1_movies"})
+     */
+    public function getDirectorName()
+    {
+        return $this->director->getName();
+    }
 }

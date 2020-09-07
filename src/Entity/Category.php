@@ -6,7 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -23,6 +23,7 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"api_v1_movies"})
      */
     private $id;
 
@@ -30,6 +31,7 @@ class Category
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank(message="Vide")
      * @Assert\Length(min=2)
+     * @Groups({"api_v1_movies"})
      */
     private $label;
 
