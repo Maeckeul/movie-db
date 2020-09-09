@@ -17,7 +17,7 @@
         <a href="{{ path('movie_list') }}" class="alert-link">Annuler la recherche</a>
     </div>
     {% endif %}
-    <div class="list-group mt-5">
+    <div class="list-group mt-5 mb-5">
         {% for movie in movies %}
         <a href="{{ path('movie_view', {'id': movie.id}) }}" class="list-group-item list-group-item-action">
             {{ movie.title }}
