@@ -15,5 +15,6 @@ class ImageUploaderTest extends TestCase
 
         $this->assertIsString($randomFileName);
         $this->assertEquals(16, strlen($randomFileName));
+        $this->assertStringEndsWith('.jpg', $randomFileName);
     }
 }
